@@ -349,11 +349,9 @@ class W3MService with ChangeNotifier, CoinbaseService implements IW3MService {
     explorerService.instance.search(query: null);
     widgetStack.instance.clear();
 
-    _context = context;
-
     final isBottomSheet = platformUtils.instance.isBottomSheet();
 
-    final theme = Web3ModalTheme.maybeOf(_context!);
+    final theme = Web3ModalTheme.maybeOf(context);
     final childWidget = theme == null
         ? Web3ModalTheme(
             themeData: const Web3ModalThemeData(),
@@ -366,7 +364,7 @@ class W3MService with ChangeNotifier, CoinbaseService implements IW3MService {
       child: childWidget,
     );
 
-    final data = MediaQueryData.fromView(View.of(_context!));
+    final data = MediaQueryData.fromView(View.of(context));
     final isTabletSize = data.size.shortestSide < 600 ? false : true;
 
     if (isBottomSheet) {
@@ -383,14 +381,20 @@ class W3MService with ChangeNotifier, CoinbaseService implements IW3MService {
                 maxHeight: 600.0,
               )
             : null,
-        context: _context!,
-        builder: (_) => rootWidget,
+        context: context,
+        builder: (context) {
+          _context = context;
+          return rootWidget;
+        },
       );
     } else {
       await showDialog(
         useRootNavigator: true,
-        context: _context!,
-        builder: (_) => rootWidget,
+        context: context,
+        builder: (context) {
+          _context = context;
+          return rootWidget;
+        },
       );
     }
 
